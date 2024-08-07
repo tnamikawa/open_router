@@ -35,7 +35,7 @@ module OpenRouter
       transforms = params[:transforms] || []
       extras = params[:extras] || {}
       stream = params[:stream]
-      
+
       parameters = { messages: messages }
       if model.is_a?(String)
         parameters[:model] = model
@@ -48,7 +48,6 @@ module OpenRouter
       parameters[:stream] = stream if stream
       parameters.merge!(extras)
 
-      p parameters
       post(path: "/chat/completions", parameters: parameters).tap do |response|
         raise ServerError, response.dig("error", "message") if response.presence&.dig("error", "message").present?
         raise ServerError, "Empty response from OpenRouter. Might be worth retrying once or twice." if stream.blank? && response.blank?

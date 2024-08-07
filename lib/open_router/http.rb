@@ -10,13 +10,8 @@ module OpenRouter
     end
 
     def post(params)
-      p "OpenRouter::HTTP.post"
-      p params
-
       path = params[:path]
       parameters = params[:parameters]
-
-      p uri(path: path)
 
       conn.post(uri(path: path)) do |req|
         if parameters[:stream].respond_to?(:call)
