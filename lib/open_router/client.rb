@@ -29,7 +29,7 @@ module OpenRouter
     # @param stream [Proc, nil] Optional callable object for streaming
     # @return [Hash] The completion response.
     def complete(messages, model: "openrouter/auto", providers: [], transforms: [], extras: {}, stream: nil)
-      parameters = { messages: message }
+      parameters = { messages: messages }
       if model.is_a?(String)
         parameters[:model] = model
       elsif model.is_a?(Array)
