@@ -2,13 +2,15 @@
 
 module OpenRouter
   module HTTP
-    def get(path:)
+    def get(params)
       conn.get(uri(path: nil)) do |req|
         req.headers = headers
       end&.body
     end
 
-    def post(path:, parameters:)
+    def post(params)
+      path = params[:path]
+      parameters = params[:parameters]
       conn.post(uri(path: nil)) do |req|
         if parameters[:stream].respond_to?(:call)
           req.options.on_data = to_json_stream(user_proc: parameters[:stream])
@@ -27,7 +29,7 @@ module OpenRouter
       end&.body
     end
 
-    def delete(path:)
+    def delete(params)
       conn.delete(uri(path: nil)) do |req|
         req.headers = headers
       end&.body
@@ -43,7 +45,8 @@ module OpenRouter
     #
     # @param user_proc [Proc] The inner proc to call for each JSON object in the chunk.
     # @return [Proc] An outer proc that iterates over a raw stream, converting it to JSON.
-    def to_json_stream(user_proc:)
+    def to_json_stream(params)
+      user_proc = params[:user_proc]
       proc do |chunk, _|
         chunk.scan(/(?:data|error): (\{.*\})/i).flatten.each do |data|
           user_proc.call(JSON.parse(data))
@@ -65,7 +68,8 @@ module OpenRouter
       end
     end
 
-    def uri(path:)
+    def uri(params)
+      path = params[:path]
       File.join(OpenRouter.configuration.uri_base, OpenRouter.configuration.api_version, path)
     end
 
