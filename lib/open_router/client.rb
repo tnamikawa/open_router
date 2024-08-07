@@ -28,7 +28,14 @@ module OpenRouter
     # @param extras [Hash] Optional hash of model-specific parameters to send to the OpenRouter API
     # @param stream [Proc, nil] Optional callable object for streaming
     # @return [Hash] The completion response.
-    def complete(messages, model: "openrouter/auto", providers: [], transforms: [], extras: {}, stream: nil)
+    def complete(params)
+      messages = params[:messages]
+      model = params[:model]
+      providers = params[:providers] || []
+      transforms = params[:transforms] || []
+      extras = params[:extras] || {}
+      stream = params[:stream]
+      
       parameters = { messages: messages }
       if model.is_a?(String)
         parameters[:model] = model
