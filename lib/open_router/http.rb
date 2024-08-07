@@ -9,8 +9,14 @@ module OpenRouter
     end
 
     def post(params)
+      p "OpenRouter::HTTP.post"
+      p params
+
       path = params[:path]
       parameters = params[:parameters]
+
+      p uri(path: nil)
+
       conn.post(uri(path: nil)) do |req|
         if parameters[:stream].respond_to?(:call)
           req.options.on_data = to_json_stream(user_proc: parameters[:stream])
