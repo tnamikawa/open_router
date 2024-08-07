@@ -29,7 +29,7 @@ module OpenRouter
     # @param stream [Proc, nil] Optional callable object for streaming
     # @return [Hash] The completion response.
     def complete(messages, model: "openrouter/auto", providers: [], transforms: [], extras: {}, stream: nil)
-      parameters = { messages: }
+      parameters = { messages: nil }
       if model.is_a?(String)
         parameters[:model] = model
       elsif model.is_a?(Array)
@@ -41,7 +41,7 @@ module OpenRouter
       parameters[:stream] = stream if stream
       parameters.merge!(extras)
 
-      post(path: "/chat/completions", parameters:).tap do |response|
+      post(path: "/chat/completions", parameters: nil).tap do |response|
         raise ServerError, response.dig("error", "message") if response.presence&.dig("error", "message").present?
         raise ServerError, "Empty response from OpenRouter. Might be worth retrying once or twice." if stream.blank? && response.blank?
 
