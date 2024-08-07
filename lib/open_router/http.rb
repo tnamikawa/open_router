@@ -3,7 +3,8 @@
 module OpenRouter
   module HTTP
     def get(params)
-      conn.get(uri(path: nil)) do |req|
+      path = params[:path]
+      conn.get(uri(path: path)) do |req|
         req.headers = headers
       end&.body
     end
@@ -15,9 +16,9 @@ module OpenRouter
       path = params[:path]
       parameters = params[:parameters]
 
-      p uri(path: nil)
+      p uri(path: path)
 
-      conn.post(uri(path: nil)) do |req|
+      conn.post(uri(path: path)) do |req|
         if parameters[:stream].respond_to?(:call)
           req.options.on_data = to_json_stream(user_proc: parameters[:stream])
           parameters[:stream] = true # Necessary to tell OpenRouter to stream.
@@ -28,15 +29,20 @@ module OpenRouter
       end&.body
     end
 
-    def multipart_post(path:, parameters: nil)
-      conn(multipart: true).post(uri(path: nil)) do |req|
+    def multipart_post(params)
+      path = params[:path]
+      parameters = params[:parameters]
+
+      conn(multipart: true).post(uri(path: path)) do |req|
         req.headers = headers.merge({ "Content-Type" => "multipart/form-data" })
         req.body = multipart_parameters(parameters)
       end&.body
     end
 
     def delete(params)
-      conn.delete(uri(path: nil)) do |req|
+      path = params[:path]
+
+      conn.delete(uri(path: path)) do |req|
         req.headers = headers
       end&.body
     end
