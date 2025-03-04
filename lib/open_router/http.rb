@@ -2,17 +2,13 @@
 
 module OpenRouter
   module HTTP
-    def get(params)
-      path = params[:path]
+    def get(path, params = {})
       conn.get(uri(path: path)) do |req|
         req.headers = headers
       end&.body
     end
 
-    def post(params)
-      path = params[:path]
-      parameters = params[:parameters]
-
+    def post(path, parameters = {})
       conn.post(uri(path: path)) do |req|
         if parameters[:stream].respond_to?(:call)
           req.options.on_data = to_json_stream(user_proc: parameters[:stream])

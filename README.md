@@ -115,6 +115,26 @@ puts response["choices"][0]["message"]["content"]
 # => "The sky is typically blue during the day due to a phenomenon called Rayleigh scattering. Sunlight..."
 ```
 
+### Multimodal Completions
+
+You can also use multimodal models that support both text and images:
+
+```ruby
+messages = [
+  {
+    role: "user",
+    content: [
+      { type: "text", text: "What's in this image?" },
+      { type: "image_url", url: "https://example.com/image.jpg", detail: "high" }
+    ]
+  }
+]
+
+response = client.complete(messages, model: "gpt-4-vision-preview")
+puts response["choices"][0]["message"]["content"]
+# => "This image shows..."
+```
+
 ### Models
 
 Pass an array to the `model` parameter to enable [explicit model routing](https://openrouter.ai/docs#model-routing).

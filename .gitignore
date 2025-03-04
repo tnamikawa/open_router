@@ -12,3 +12,4 @@
 *.gem
 .env
 .idea
+.DS_Store
